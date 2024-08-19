@@ -14,7 +14,7 @@ const HORIZONTAL:string='H';
 const VERTICAL:string='V'; 
 
 // specify configuration as json data 
-let Config = {
+const DEFAULT_CONFIG  = {
   "DATA_HEADERS": ["profile", "tool", "page", "fonctionnality", "type", "comment", "level"],
   "TOP_NAME": "Retours par pages",
   "SECTION_HEADERS": ["tool", "page", "fonctionnality"],
@@ -32,7 +32,20 @@ let Config = {
   "LINE_SPLITER": "\n"
 }
 
+//check if the config contain all the requested values 
+function checkConfig(newConfig: any, defaultConfig: any): any {
+  for (let key in defaultConfig) {
+    if (!(key in newConfig)) {
+      newConfig[key] = defaultConfig[key];
+    }
+  }
+  return newConfig;
+}
 
+let Config: any = DEFAULT_CONFIG;
+function setConfig(newConfig:any){
+  Config = checkConfig(newConfig, DEFAULT_CONFIG);
+}
 
 function printConfig(){
   console.log('DATA_HEADERS:', Config.DATA_HEADERS);
@@ -49,12 +62,13 @@ function printConfig(){
 }
 
 if (true){
-   Config = {
+  // load new config but fill the missing value with the default one
+  let newConfig = {
     "DATA_HEADERS": ["profile", "type", "category", "comment"],
     "TOP_NAME": "Retours synthétiques",
     "SECTION_HEADERS": ["category", "type"],
-    "SECTION_DIRECTIONS": ["VERTICAL", "HORIZONTAL"],
-    "STICKY_DIRECTION": "HORIZONTAL",
+    "SECTION_DIRECTIONS": ["V", "H"],
+    "STICKY_DIRECTION": "H",
     "STICKY_CONTENT_HEADER": "comment",
     "STICKY_COLOR_HEADER": "type",
     "STICKY_COLOR_MAP": {
@@ -63,8 +77,9 @@ if (true){
       "Risques": "red",
       "Killer Feature": "green"
     },
-    "STICKY_AUTHOR_HEADER": "profile"
+    "STICKY_AUTHOR_HEADER": "profile",
   }
+  setConfig(newConfig);
 }
 
 
@@ -101,8 +116,9 @@ class Data extends Map<string,string> {
 
   toString() : string{
     let s = "Data : ";
+    //@ts-ignore
     Config.DATA_HEADERS.forEach(h=> s+= "   "+ h + " : " +this.get(h));
-    return s;
+    return s; 
   }
 }
 

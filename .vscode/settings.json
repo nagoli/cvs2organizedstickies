@@ -1,0 +1,5 @@
+{
+    "CodeGPT.Autocomplete.provider": "Mistral - codestral-latest",
+    "CodeGPT.Autocomplete.enabled": true,
+    "CodeGPT.Autocomplete.maxTokens": 120
+}
