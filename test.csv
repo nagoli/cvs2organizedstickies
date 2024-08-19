@@ -1,0 +1,8 @@
+Profil	Outil	Page	Fonctionnalité	Type de retour	Commentaire	Niveau du retour
+Auditeur	Excel	Grille Excel	Accès chez le client	Positif	Parfois l'audit est hors ligne à cause des restrictions VPN ou autres	Flux de travail
+Auditeur	Excel	Grille Excel	Accès chez le client	Négatif	D'autres fois, utilise la machine du client et on ne peut rien y installer	Flux de travail
+Auditeur	Excel	Grille Excel	Alternance Site audité et outil	Neutre	Manipulation entre le web et excel compliquée au début mais maintenant elle s’en sort bien	Flux de travail
+Auditeur	Excel	Grille Excel	Captures d'écran	Positif	Essaie d'avoir une capture par NC et la colle directement dans le rapport	Flux de travail
+Auditeur	Excel	Grille Excel	Copie / Récurrence	Négatif	Les récurrences ne s'appliquent pas sur les pages créées pendant l'audit	Flux de travail
+Auditeur Senior	Excel	Grille Excel	Copie / Récurrence	Positif	Copie des statuts d'une autre page pour débuter, car nouvelle page similaire	Flux de travail
+Auditeur Senior	Excel	Grille Excel	Copie / Récurrence	Positif	Ne copie pas les commentaires car utilise la notion de récurrence pour les critères NC	Flux de travail

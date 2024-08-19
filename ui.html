@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Figma Plugin</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+    textarea {
+      width: 100%;
+      height: 400;
+      margin-bottom: 10px;
+    }
+    button {
+      padding: 10px 15px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+<h2>CSV 2 organized stickies</h2>
+
+<button style="display:block;width:120px; height:30px;" onclick="document.getElementById('get_the_file').click()">Choose file</button>
+<input type='file' id="get_the_file" style="display:none">
+
+
+<textarea id="userInput" placeholder="
+
+
+
+"></textarea>
+  <button id="submitButton">Submit</button>
+  <button id="printConfig">printConfig</button>
+
+<script>
+
+
+  document.getElementById("get_the_file").addEventListener("change", function() {
+    var file_to_read = document.getElementById("get_the_file").files[0];
+    var fileread = new FileReader();
+    fileread.onload = function(e) {
+      var content = e.target.result;
+      parent.postMessage({ pluginMessage: { type: 'read-file', content } }, '*')
+    };
+    fileread.readAsText(file_to_read);
+  });
+      // Handle the button click
+  document.getElementById('submitButton').onclick = () => {
+    const content = document.getElementById('userInput').value;
+    // Send the content to the plugin code
+    parent.postMessage({ pluginMessage: { type: 'submit', content } }, '*');
+  };
+  document.getElementById('printConfig').onclick = () => {
+    parent.postMessage({ pluginMessage: { type: 'print-config' } }, '*');
+  };
+
+</script>
+
+
+</body>
+</html>
