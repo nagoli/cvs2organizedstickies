@@ -15,6 +15,7 @@ const VERTICAL:string='V';
 
 // specify configuration as json data 
 const DEFAULT_CONFIG  = {
+  "SKIP_FIRST_LINE" : "0",
   "DATA_HEADERS": ["profile", "tool", "page", "fonctionnality", "type", "comment", "level"],
   "TOP_NAME": "Retours par pages",
   "SECTION_HEADERS": ["tool", "page", "fonctionnality"],
@@ -64,6 +65,7 @@ function printConfig(){
 if (true){
   // load new config but fill the missing value with the default one
   let newConfig = {
+    "SKIP_FIRST_LINE" : "0",
     "DATA_HEADERS": ["profile", "type", "category", "comment"],
     "TOP_NAME": "Retours synthétiques",
     "SECTION_HEADERS": ["category", "type"],
@@ -139,7 +141,7 @@ function createDataListFromString(sString: string) : Data[] {
   let data: Map<string,string>[] =[];
   let elts = sString.split(Config.LINE_SPLITER);
   for (let i = 0; i < elts.length; i++) {
-    //test if there is some content at that line  
+    if (i==0 && Config.SKIP_FIRST_LINE=="1") continue;
     if (elts[i])
         data.push(createDataFromString(elts[i]));
   }
@@ -346,8 +348,6 @@ class DataTree {
 
 // Runs this code if the plugin is run in Figma
 if (figma.editorType === "figma") {
-
-
   // Make sure to close the plugin when you're done. Otherwise the plugin will
   // keep running, which shows the cancel button at the bottom of the screen.
   figma.closePlugin();
@@ -360,12 +360,10 @@ if (figma.editorType === "figjam") {
     figma.showUI(__html__, { width: 400, height: 600 });
 
     // This shows the HTML page in "ui.html".
-
-
     
     figma.ui.onmessage =  (msg: {type: string, content: string}) => {
 
-      if (msg.type === 'read-file') {
+      if (msg.type === 'create-stickies') {
           const dataList = createDataListFromString(msg.content);
           let tree = new DataTree(0,Config.TOP_NAME,dataList);
           tree.buildTree();
@@ -376,7 +374,7 @@ if (figma.editorType === "figjam") {
           //figma.closePlugin();
       }
 
-      if (msg.type === 'submit') {
+      if (msg.type === 'submit-config') {
         // set msg.content as newconfiguration  
 
         setConfig(JSON.parse(msg.content));

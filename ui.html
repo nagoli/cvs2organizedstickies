@@ -8,6 +8,10 @@
       margin: 0;
       padding: 20px;
     }
+    div {
+      margin-bottom: 10px;
+      margin-top: 20px;
+    }
     textarea {
       width: 100%;
       height: 400;
@@ -23,38 +27,70 @@
   </style>
 </head>
 <body>
-<h2>CSV 2 organized stickies</h2>
+  <h2>Make organized stickies from a CSV file</h2>
+  
+<div> CSV file to take into account : </div>
 
-<button style="display:block;width:120px; height:30px;" onclick="document.getElementById('get_the_file').click()">Choose file</button>
-<input type='file' id="get_the_file" style="display:none">
-
-
-<textarea id="userInput" placeholder="
+<input type='file' id="get_csv" >
 
 
-
-"></textarea>
-  <button id="submitButton">Submit</button>
-  <button id="printConfig">printConfig</button>
+<div> Settings : </div>
+<input type='file' id="get_config" >
+<textarea id="config_input">
+{
+  "SKIP_FIRST_LINE" : "1",
+  "DATA_HEADERS": ["col1", "col2", "col3", "col4","col5","col6"],
+  "TOP_NAME": "Name of the main section",
+  "SECTION_HEADERS": ["col2", "col3", "col1"],
+  "SECTION_DIRECTIONS": ["H", "V", "H"],
+  "STICKY_DIRECTION": "V",
+  "STICKY_CONTENT_HEADER": "col4",
+  "STICKY_COLOR_HEADER": "col5",
+  "STICKY_COLOR_MAP": {
+    "ok": "lightgreen",
+    "neutral": "lightyellow",
+    "ko": "lightpink"
+  },
+  "STICKY_AUTHOR_HEADER": "col6",
+  "HEADER_SPLITER": "\t",
+  "LINE_SPLITER": "\n"
+}
+</textarea>
+  <button id="submitButton">Create Stickies</button>
+  <!--button id="printConfig">printConfig</button-->
 
 <script>
 
-
-  document.getElementById("get_the_file").addEventListener("change", function() {
-    var file_to_read = document.getElementById("get_the_file").files[0];
+  var file_to_read;
+  document.getElementById("get_config").addEventListener("change", function() {
+    var file_to_read = document.getElementById("get_config").files[0];
+    var fileName = file_to_read ? file_to_read.name : "No file chosen";
     var fileread = new FileReader();
-    fileread.onload = function(e) {
-      var content = e.target.result;
-      parent.postMessage({ pluginMessage: { type: 'read-file', content } }, '*')
-    };
-    fileread.readAsText(file_to_read);
+      fileread.onload = function(e) {
+        var content = e.target.result;
+        document.getElementById('config_input').textContent = content;
+      };
+      fileread.readAsText(file_to_read);
   });
+
       // Handle the button click
   document.getElementById('submitButton').onclick = () => {
-    const content = document.getElementById('userInput').value;
-    // Send the content to the plugin code
-    parent.postMessage({ pluginMessage: { type: 'submit', content } }, '*');
+    var csv_file = document.getElementById("get_csv").files[0];
+    if (csv_file){
+      var content = document.getElementById('config_input').value;
+      parent.postMessage({ pluginMessage: { type: 'submit-config', content } }, '*');
+      console.log("config sent");
+      var fileread = new FileReader();
+      fileread.onload = function(e) {
+        var content = e.target.result;
+        console.log("ready to send content " + content);
+        parent.postMessage({ pluginMessage: { type: 'create-stickies', content } }, '*')
+      };
+      fileread.readAsText(csv_file);
+      console.log("csv sent");
+    } 
   };
+
   document.getElementById('printConfig').onclick = () => {
     parent.postMessage({ pluginMessage: { type: 'print-config' } }, '*');
   };
