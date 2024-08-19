@@ -377,7 +377,9 @@ if (figma.editorType === "figjam") {
       }
 
       if (msg.type === 'submit') {
-          eval(msg.content);
+        // set msg.content as newconfiguration  
+
+        setConfig(JSON.parse(msg.content));
           console.log("Take new configuration into account : \n"+msg.content);
 
       }
