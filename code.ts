@@ -141,9 +141,11 @@ function createDataListFromString(sString: string) : Data[] {
   let data: Map<string,string>[] =[];
   let elts = sString.split(Config.LINE_SPLITER);
   for (let i = 0; i < elts.length; i++) {
-    if (i==0 && Config.SKIP_FIRST_LINE=="1") continue;
-    if (elts[i])
+    if (!(i==0 && Config.SKIP_FIRST_LINE=="1")) {
+      if (elts[i])
         data.push(createDataFromString(elts[i]));
+    }
+    
   }
   return data;
 }
