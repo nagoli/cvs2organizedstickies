@@ -56,11 +56,23 @@
   "LINE_SPLITER": "\n"
 }
 </textarea>
-  <button id="submitButton">Create Stickies</button>
+<div>JSON check : <span id="json-state"></span></div>
+<button id="submitButton">Create Stickies</button>
   <!--button id="printConfig">printConfig</button-->
 
 <script>
-
+  function checkJson(s){
+    span = document.getElementById("json-state")
+    console.log("check json");
+    try{
+      JSON.parse(s);
+      span.textContent=("JSON ok");
+      return true;
+    } catch (e) {
+        span.textContent="Error in JSON:" + e.message;
+        return false;
+    }
+  }
   var file_to_read;
   document.getElementById("get_config").addEventListener("change", function() {
     var file_to_read = document.getElementById("get_config").files[0];
@@ -69,6 +81,8 @@
       fileread.onload = function(e) {
         var content = e.target.result;
         document.getElementById('config_input').textContent = content;
+        checkJson(content);
+
       };
       fileread.readAsText(file_to_read);
   });
@@ -76,8 +90,8 @@
       // Handle the button click
   document.getElementById('submitButton').onclick = () => {
     var csv_file = document.getElementById("get_csv").files[0];
-    if (csv_file){
-      var content = document.getElementById('config_input').value;
+    var content = document.getElementById('config_input').value;
+    if (csv_file && checkJson(content)){
       parent.postMessage({ pluginMessage: { type: 'submit-config', content } }, '*');
       console.log("config sent");
       var fileread = new FileReader();
@@ -91,9 +105,9 @@
     } 
   };
 
-  document.getElementById('printConfig').onclick = () => {
-    parent.postMessage({ pluginMessage: { type: 'print-config' } }, '*');
-  };
+  // document.getElementById('printConfig').onclick = () => {
+  //   parent.postMessage({ pluginMessage: { type: 'print-config' } }, '*');
+  // };
 
 </script>
 
